@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>FESSA Clientes</title>
+<meta name="theme-color" content="#07070b">
+<style>
+:root{
+  --bg:#07070b;--panel:#101018;--panel2:#151522;--line:rgba(210,165,255,.22);
+  --violet:#8b5cf6;--violet2:#5b21b6;--soft:#c4b5fd;--white:#fff;--muted:#b9b0c5;
+  --green:#34d399;--red:#fb7185;--yellow:#facc15;--orange:#fb923c;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;background:
+radial-gradient(circle at top right,rgba(139,92,246,.22),transparent 30%),
+radial-gradient(circle at bottom left,rgba(91,33,182,.18),transparent 35%),
+linear-gradient(#090910,#030305);font-family:Arial,Helvetica,sans-serif;color:var(--white)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background:
+linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px}
+.app{max-width:540px;margin:auto;min-height:100vh;padding:18px 15px 92px}
+.top{text-align:center;margin:5px 0 14px}.logo{font-size:44px;font-weight:900;font-style:italic;letter-spacing:2px}
+.logo span{color:var(--soft);text-shadow:0 0 22px rgba(139,92,246,.85)}.subtitle{letter-spacing:8px;color:#eee;font-size:12px}
+.screen{display:none;animation:fade .22s}.screen.active{display:block}@keyframes fade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{border:1px solid var(--line);border-radius:23px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));box-shadow:0 18px 38px #0009,0 0 35px rgba(139,92,246,.08);padding:16px;margin:12px 0}
+h1,h2,h3{margin:5px 0 10px}.muted{color:var(--muted);font-size:14px;line-height:1.35}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tile{border:1px solid var(--line);border-radius:18px;background:#090910;padding:14px}.tile b{display:block}.tile .value{font-size:28px;color:var(--soft);font-weight:900;margin-top:5px}
+button,.btn{width:100%;border:0;border-radius:17px;padding:15px 14px;margin-top:12px;background:linear-gradient(180deg,var(--violet),var(--violet2));color:#fff;font-weight:900;font-size:15px;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 0 24px rgba(139,92,246,.32);text-decoration:none;display:block;text-align:center}
+button.secondary{background:#11111a;border:1px solid var(--line);box-shadow:none;color:#eee}button.green{background:linear-gradient(180deg,#38eaa1,#11875b)}button.red{background:linear-gradient(180deg,#ff6682,#9d1730)}button.small{width:auto;padding:9px 12px;border-radius:12px;font-size:12px;margin:4px 4px 0 0;display:inline-block}
+label{display:block;margin:12px 0 6px;color:#ddd}input,select,textarea{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#07070c;color:#fff;font-size:16px;outline:none}textarea{min-height:80px;resize:vertical}
+.client{border:1px solid var(--line);border-radius:18px;background:#090910;padding:13px;margin:10px 0}.clientTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.avatar{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--soft);font-weight:900;background:#151522;flex:0 0 auto}.clientMain{flex:1}.client b{font-size:17px}.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.pill{font-size:12px;padding:7px 9px;border-radius:999px;background:#202030;color:#eee;border:1px solid rgba(255,255,255,.06)}.pill.yellow{background:#3a3108;color:#facc15}.pill.orange{background:#3a2208;color:#fb923c}.pill.red{background:#3a0811;color:#fb7185}.pill.green{background:#07351f;color:#34d399}
+.sale{border:1px solid var(--line);border-radius:16px;background:#0b0b13;padding:12px;margin:9px 0}.money{color:var(--green);font-weight:900;font-size:20px}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions a{color:#fff;text-decoration:none}
+.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(540px,100%);display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:9px 10px 12px;background:linear-gradient(transparent,#000 25%,#000);z-index:20}.nav div{text-align:center;color:#aaa;font-weight:900;font-size:11px;text-transform:uppercase;border:1px solid transparent;border-radius:16px;padding:7px}.nav div.on{color:var(--soft);border-color:var(--line);background:rgba(139,92,246,.12)}.nav span{display:block;font-size:23px}
+.toast{position:fixed;left:50%;top:15px;transform:translateX(-50%) translateY(-110px);width:min(470px,92%);background:#11111a;border:1px solid var(--line);border-radius:17px;padding:14px;text-align:center;font-weight:900;z-index:99;transition:.25s}.toast.show{transform:translateX(-50%) translateY(0)}
+.empty{border:1px dashed var(--line);border-radius:16px;color:var(--muted);padding:18px;text-align:center}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.dateTag{color:var(--soft);font-weight:900}.searchbar{position:sticky;top:0;z-index:5;padding:8px 0;background:linear-gradient(#07070b,#07070bde)}
+@media(max-width:390px){.logo{font-size:38px}.grid,.row{grid-template-columns:1fr}.tile .value{font-size:24px}}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<main class="app">
+  <div class="top">
+    <div class="logo">FESSA <span>CLIENTES</span></div>
+    <div class="subtitle">CRM PROFESIONAL</div>
+  </div>
+
+  <section id="home" class="screen active">
+    <div class="card">
+      <h2>🏠 Panel de clientes</h2>
+      <p class="muted">Base de datos, historial, recordatorios y cumpleaños.</p>
+      <button onclick="openClientForm()">➕ Agregar cliente</button>
+      <div class="grid" id="homeStats"></div>
+    </div>
+    <div class="card">
+      <h2>🔔 Recordatorios de hoy</h2>
+      <div id="homeReminders"></div>
+    </div>
+    <div class="card">
+      <h2>🎂 Cumpleaños</h2>
+      <div id="homeBirthdays"></div>
+    </div>
+  </section>
+
+  <section id="clients" class="screen">
+    <div class="searchbar">
+      <input id="search" oninput="render()" placeholder="Buscar por nombre, teléfono o peluquero...">
+    </div>
+    <div class="card">
+      <h2>👩 Clientes</h2>
+      <button onclick="openClientForm()">➕ Agregar cliente</button>
+      <div id="clientList"></div>
+    </div>
+  </section>
+
+  <section id="form" class="screen">
+    <div class="card">
+      <h2 id="formTitle">➕ Nuevo cliente</h2>
+      <input id="editingId" type="hidden">
+      <label>Nombre y apellido</label><input id="cName" placeholder="Ej: María González">
+      <label>Teléfono / WhatsApp</label><input id="cPhone" placeholder="Ej: 11 3014 7625">
+      <label>Fecha de nacimiento</label><input id="cBirthday" type="date">
+      <label>Instagram</label><input id="cInstagram" placeholder="@usuario">
+      <label>Peluquero / Colorista</label><input id="cStylist" placeholder="Ej: Melisa">
+      <label>Observaciones</label><textarea id="cNotes" placeholder="Ej: tono usado, alergias, prefiere sábados..."></textarea>
+      <button class="green" onclick="saveClient()">Guardar cliente</button>
+      <button class="secondary" onclick="go('clients')">Volver</button>
+    </div>
+  </section>
+
+  <section id="profile" class="screen">
+    <div id="profileContent"></div>
+  </section>
+
+  <section id="visitForm" class="screen">
+    <div class="card">
+      <h2>📅 Nueva visita</h2>
+      <input id="visitClientId" type="hidden">
+      <label>Fecha</label><input id="vDate" type="date">
+      <label>Servicio</label><input id="vService" placeholder="Ej: Color, corte, brushing...">
+      <label>Precio</label><input id="vPrice" type="number" placeholder="Ej: 25000">
+      <label>Peluquero</label><input id="vStylist" placeholder="Ej: Myriam">
+      <label>Observaciones</label><textarea id="vNotes" placeholder="Fórmula, tono, producto, detalles del trabajo..."></textarea>
+      <button class="green" onclick="saveVisit()">Guardar visita</button>
+      <button class="secondary" onclick="openProfile(visitClientId.value)">Volver</button>
+    </div>
+  </section>
+
+  <section id="reminders" class="screen">
+    <div class="card">
+      <h2>🔔 Recordatorios</h2>
+      <p class="muted">Clientes según días desde su última visita.</p>
+      <div class="row">
+        <button class="secondary" onclick="reminderFilter=20;render()">20 días</button>
+        <button class="secondary" onclick="reminderFilter=30;render()">30 días</button>
+        <button class="secondary" onclick="reminderFilter=60;render()">60 días</button>
+        <button class="secondary" onclick="reminderFilter=90;render()">90 días</button>
+        <button class="secondary" onclick="reminderFilter=180;render()">180 días</button>
+      </div>
+      <div id="reminderList"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="nav">
+  <div id="navHome" class="on" onclick="go('home')"><span>🏠</span>Inicio</div>
+  <div id="navClients" onclick="go('clients')"><span>👩</span>Clientes</div>
+  <div id="navReminders" onclick="go('reminders')"><span>🔔</span>Recordar</div>
+  <div id="navForm" onclick="openClientForm()"><span>➕</span>Nuevo</div>
+</nav>
+
+<script>
+const LS_CLIENTS="fessa_clientes_v1";
+let clients=JSON.parse(localStorage.getItem(LS_CLIENTS)||"[]");
+let selectedClientId=null, reminderFilter=20;
+
+function save(){localStorage.setItem(LS_CLIENTS,JSON.stringify(clients))}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function fmt(d){if(!d)return "Sin fecha";return new Date(d+"T00:00:00").toLocaleDateString("es-AR")}
+function money(n){return "$"+Number(n||0).toLocaleString("es-AR")}
+function cleanPhone(p){return (p||"").replace(/\D/g,"")}
+function toast(msg){toastEl.textContent=msg;toastEl.classList.add("show");setTimeout(()=>toastEl.classList.remove("show"),2300)}
+function initials(name){return (name||"?").split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase()}
+function daysSince(dateStr){if(!dateStr)return null;const a=new Date(dateStr+"T00:00:00"),b=new Date();return Math.floor((new Date(b.getFullYear(),b.getMonth(),b.getDate())-a)/86400000)}
+function lastVisit(c){return (c.visits||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0]||null}
+function totalSpent(c){return (c.visits||[]).reduce((s,v)=>s+Number(v.price||0),0)}
+function birthdayToday(c){if(!c.birthday)return false;let t=new Date(),b=new Date(c.birthday+"T00:00:00");return t.getDate()===b.getDate()&&t.getMonth()===b.getMonth()}
+function waLink(phone,msg){let p=cleanPhone(phone);if(!p.startsWith("54"))p="54"+p;return "https://wa.me/"+p+"?text="+encodeURIComponent(msg)}
+function reminderMsg(c,d){let first=(c.name||"").split(" ")[0]||"genia";return `Hola ${first} 😊 ¿Cómo estás? Te escribimos de FESSA. Ya pasó un tiempo desde tu última visita. Si querés renovar tu look, respondé este mensaje y te reservamos un turno 💜`}
+function birthdayMsg(c){let first=(c.name||"").split(" ")[0]||"genia";return `¡Feliz cumple ${first}! 🎂💜 Te deseamos un hermoso día de parte de FESSA. Cuando quieras pasar por el salón, te esperamos.`}
+
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav div").forEach(n=>n.classList.remove("on"));
+  ({home:navHome,clients:navClients,reminders:navReminders,form:navForm}[id]||navHome).classList.add("on");
+  render();
+}
+function openClientForm(id=null){
+  editingId.value=id||"";
+  formTitle.textContent=id?"✏️ Editar cliente":"➕ Nuevo cliente";
+  const c=clients.find(x=>x.id===id);
+  cName.value=c?.name||"";cPhone.value=c?.phone||"";cBirthday.value=c?.birthday||"";cInstagram.value=c?.instagram||"";cStylist.value=c?.stylist||"";cNotes.value=c?.notes||"";
+  go("form");
+}
+function saveClient(){
+  const name=cName.value.trim(), phone=cPhone.value.trim();
+  if(!name||!phone){toast("Completá nombre y teléfono.");return}
+  const id=editingId.value||Date.now()+"";
+  const base={id,name,phone,birthday:cBirthday.value,instagram:cInstagram.value.trim(),stylist:cStylist.value.trim(),notes:cNotes.value.trim(),createdAt:new Date().toISOString(),visits:[]};
+  const idx=clients.findIndex(c=>c.id===id);
+  if(idx>=0)clients[idx]={...clients[idx],...base,createdAt:clients[idx].createdAt,visits:clients[idx].visits||[]};
+  else clients.push(base);
+  cName.value="";cPhone.value="";cBirthday.value="";cInstagram.value="";cStylist.value="";cNotes.value="";editingId.value="";
+  save();
+  toast("Cliente registrado correctamente.");
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("home").classList.add("active");
+  document.querySelectorAll(".nav div").forEach(n=>n.classList.remove("on"));
+  navHome.classList.add("on");
+  render();
+}
+function deleteClient(id){if(confirm("¿Eliminar cliente y su historial?")){clients=clients.filter(c=>c.id!==id);save();go("clients")}}
+function openProfile(id){selectedClientId=id;renderProfile();go("profile")}
+function openVisitForm(id){
+  visitClientId.value=id;vDate.value=todayISO();
+  const c=clients.find(x=>x.id===id);vStylist.value=c?.stylist||"";vService.value="";vPrice.value="";vNotes.value="";
+  go("visitForm");
+}
+function saveVisit(){
+  const id=visitClientId.value,c=clients.find(x=>x.id===id);
+  if(!c)return;
+  if(!vDate.value||!vService.value.trim()){toast("Completá fecha y servicio.");return}
+  c.visits=c.visits||[];
+  c.visits.push({id:Date.now()+"",date:vDate.value,service:vService.value.trim(),price:Number(vPrice.value||0),stylist:vStylist.value.trim(),notes:vNotes.value.trim(),createdAt:new Date().toISOString()});
+  if(vStylist.value.trim())c.stylist=vStylist.value.trim();
+  save();toast("Visita guardada.");openProfile(id);
+}
+function deleteVisit(cid,vid){const c=clients.find(x=>x.id===cid);if(c&&confirm("¿Eliminar visita?")){c.visits=(c.visits||[]).filter(v=>v.id!==vid);save();openProfile(cid)}}
+
+function clientStatus(days){
+  if(days==null)return {text:"Sin visitas", cls:""};
+  if(days<30)return {text:"Cliente activo", cls:"green"};
+  if(days<60)return {text:"Hace tiempo que no viene", cls:"yellow"};
+  if(days<90)return {text:"Conviene contactarlo", cls:"orange"};
+  return {text:"Cliente inactivo", cls:"red"};
+}
+function clientCard(c){
+  const lv=lastVisit(c), d=lv?daysSince(lv.date):null;
+  let color=d==null?"":d>=90?"red":d>=60?"orange":d>=30?"yellow":"green";
+  return `<div class="client"><div class="clientTop"><div class="avatar">${initials(c.name)}</div><div class="clientMain"><b>${c.name}</b><p class="muted">${c.phone}<br>${c.stylist?("Peluquero/Colorista: "+c.stylist):"Sin peluquero / colorista"}</p><div class="pills"><span class="pill">Visitas: ${(c.visits||[]).length}</span><span class="pill ${color}">Última: ${lv?("hace "+d+" días"):"sin visitas"}</span>${birthdayToday(c)?'<span class="pill yellow">🎂 Cumple hoy</span>':""}</div></div></div><button class="secondary" onclick="openProfile('${c.id}')">Ver ficha</button></div>`;
+}
+function renderProfile(){
+  const c=clients.find(x=>x.id===selectedClientId);
+  if(!c){profileContent.innerHTML='<div class="empty">Cliente no encontrado.</div>';return}
+  const lv=lastVisit(c), d=lv?daysSince(lv.date):null, visits=(c.visits||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const st=clientStatus(d);
+  profileContent.innerHTML=`<div class="card"><h2>${c.name}</h2><div class="pills"><span class="pill ${st.cls}">${st.text}</span></div><p class="muted">📞 ${c.phone}<br>${c.instagram?"📸 "+c.instagram+"<br>":""}${c.stylist?"💇 Peluquero/Colorista: "+c.stylist+"<br>":""}${c.birthday?"🎂 "+fmt(c.birthday):""}</p><div class="grid"><div class="tile"><b>Visitas</b><div class="value">${visits.length}</div></div><div class="tile"><b>Gastó</b><div class="value">${money(totalSpent(c))}</div></div></div><div class="pills"><span class="pill ${d>=90?"red":d>=60?"orange":d>=30?"yellow":"green"}">Última visita: ${lv?("hace "+d+" días"):"sin visitas"}</span></div><p class="muted">${c.notes||""}</p><div class="actions"><a class="btn small" href="${waLink(c.phone,"Hola "+(c.name.split(" ")[0]||"")+" 😊 Te escribimos de FESSA.")}" target="_blank">WhatsApp</a><button class="small green" onclick="openVisitForm('${c.id}')">Nueva visita</button><button class="small secondary" onclick="openClientForm('${c.id}')">Editar</button><button class="small red" onclick="deleteClient('${c.id}')">Eliminar</button></div></div><div class="card"><h2>📅 Historial</h2>${visits.length?visits.map(v=>`<div class="sale"><b>${fmt(v.date)} · ${v.service}</b><div class="money">${money(v.price)}</div><p class="muted">${v.stylist?("Peluquero/Colorista: "+v.stylist+"<br>"):""}${v.notes||""}</p><button class="small secondary" onclick="deleteVisit('${c.id}','${v.id}')">Eliminar visita</button></div>`).join(""):'<div class="empty">Todavía no tiene visitas registradas.</div>'}</div><button class="secondary" onclick="go('clients')">Volver</button>`;
+}
+
+function render(){
+  const total=clients.length, month=new Date().toISOString().slice(0,7);
+  const newMonth=clients.filter(c=>(c.createdAt||"").slice(0,7)===month).length;
+  const birthdays=clients.filter(birthdayToday);
+  const reminders=clients.filter(c=>{let lv=lastVisit(c);return lv&&daysSince(lv.date)>=30});
+  homeStats.innerHTML=`<div class="tile"><b>Total clientes</b><div class="value">${total}</div></div><div class="tile"><b>Nuevos mes</b><div class="value">${newMonth}</div></div><div class="tile"><b>Cumpleaños</b><div class="value">${birthdays.length}</div></div><div class="tile"><b>Recordatorios</b><div class="value">${reminders.length}</div></div>`;
+  homeReminders.innerHTML=reminders.slice(0,4).map(clientCard).join("")||'<div class="empty">No hay recordatorios pendientes.</div>';
+  homeBirthdays.innerHTML=birthdays.map(c=>`<div class="client"><b>${c.name}</b><p class="muted">${c.phone}</p><a class="btn" target="_blank" href="${waLink(c.phone,birthdayMsg(c))}">🎉 Enviar saludo</a></div>`).join("")||'<div class="empty">Hoy no hay cumpleaños cargados.</div>';
+
+  const q=(search?.value||"").toLowerCase();
+  const filtered=clients.filter(c=>c.name.toLowerCase().includes(q)||c.phone.includes(q)||(c.stylist||"").toLowerCase().includes(q));
+  clientList.innerHTML=filtered.length?filtered.map(clientCard).join(""):'<div class="empty">No hay clientes para mostrar.</div>';
+
+  const filteredRem=clients.filter(c=>{let lv=lastVisit(c);return lv&&daysSince(lv.date)>=reminderFilter}).sort((a,b)=>daysSince(lastVisit(b).date)-daysSince(lastVisit(a).date));
+  reminderList.innerHTML=`<h3>Hace ${reminderFilter}+ días</h3>`+(filteredRem.length?filteredRem.map(c=>{let lv=lastVisit(c),d=daysSince(lv.date);return `<div class="client"><b>${c.name}</b><p class="muted">Hace <b>${d} días</b> que no viene<br>Última visita: ${fmt(lv.date)}<br>${c.phone}</p><a class="btn" target="_blank" href="${waLink(c.phone,reminderMsg(c,d))}">📲 Enviar WhatsApp</a><button class="secondary" onclick="openProfile('${c.id}')">Ver ficha</button></div>`}).join(""):'<div class="empty">No hay clientes en este grupo.</div>');
+  if(document.getElementById("profile").classList.contains("active"))renderProfile();
+}
+render();
+</script>
+</body>
+</html>
